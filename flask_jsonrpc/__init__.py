@@ -37,7 +37,7 @@ from flask_jsonrpc._compat import (b, u, text_type, string_types,
                                    OrderedDict, NativeStringIO)
 from flask_jsonrpc.types import (Object, Number, Boolean, String, Array,
                                  Nil, Any, Type)
-from flask_jsonrpc.helpers import (jsonify_status_code,
+from flask_jsonrpc.helpers import (marshall_status_code,
                                    extract_raw_data_request, authenticate)
 from flask_jsonrpc.exceptions import (Error, ParseError, InvalidRequestError,
                                       MethodNotFoundError, InvalidParamsError,
@@ -162,7 +162,7 @@ def _site_api(site):
         if current_app.config['DEBUG']:
             logging.debug('request: %s', extract_raw_data_request(request))
             logging.debug('response: %s, %s', status_code, response_dict)
-        return jsonify_status_code(status_code, response_dict), status_code
+        return marshall_status_code(status_code, response_dict), status_code
     return wrapper
 
 

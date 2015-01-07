@@ -44,6 +44,7 @@ from flask_jsonrpc.exceptions import (Error, ParseError, InvalidRequestError,
                                       MethodNotFoundError, InvalidParamsError,
                                       ServerError, RequestPostError,
                                       InvalidCredentialsError, OtherError)
+import msgpack
 
 empty_dec = lambda f: f
 try:
@@ -271,7 +272,10 @@ class JSONRPCSite(object):
                 raise RequestPostError
             else:
                 try:
-                    D = json.loads(raw_data)
+                    if request.headers['Content-Type'] == 'application/msgpack':
+                        D = msgpack.loads(raw_data)
+                    else:
+                        D = json.loads(raw_data)
                 except Exception as e:
                     raise InvalidRequestError(e.message)
 
