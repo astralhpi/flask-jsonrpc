@@ -32,14 +32,15 @@ from flask import current_app, request, jsonify, json
 from flask_jsonrpc._compat import b, u, text_type
 from flask_jsonrpc.exceptions import InvalidCredentialsError, InvalidParamsError
 import msgpack
+import base64
 
 
 def marshall_status_code(status_code, *args, **kw):
-    if request.headers['Content-Type'] == 'application/msgpack':
+    if request.headers['Content-Type'] == 'application/base64+msgpack':
         d = msgpack.dumps(dict(*args, **kw))
         rv = current_app.response_class(
-            (d, '\n'),
-            mimetype='application/msgpack')
+            base64.b64encode(d),
+            mimetype='application/base64+msgpack')
         return rv
     else:
         return jsonify_status_code(status_code, args, kw)
